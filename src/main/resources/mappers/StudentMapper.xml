@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gradle_mybatis_spring_study.mapper.StudentMapper">
+
+	<sql id="selectSQL">
+		SELECT * FROM STUDENTS
+	</sql>
+	
+	<sql id="whereSQL">
+		<where>
+			<if test="studId != null">
+				STUD_ID = #{studId}
+			</if>
+		</where>
+	</sql>
+
+	<!-- setting: mapUnder어쩌구 추가해서  STUD_ID AS studId 안 해줘도 됨-->
+	
+	<!-- <select id="selectStudentByNo" parameterType="Student" resultType="Student">
+		SELECT stud_id, name, email, dob, phone
+		FROM STUDENTS
+		WHERE stud_id = #{studId}
+	</select> -->
+	
+	<select id="selectStudentByNo" parameterType="Student" resultType="Student">
+		<include refid="selectSQL" />
+		<include refid="whereSQL" />
+	</select>
+	
+	
+	<!-- ResultMap이용 -->
+	
+    <resultMap type="Student" id="stdResult">
+       <id column="stud_id" property="studId"/>
+       <result column="f" property="phone.countryCode"/>
+       <result column="m" property="phone.stateCode"/>
+       <result column="l" property="phone.number"/>
+    </resultMap>
+    
+    <select id="selectStudentByNoWithResultMap" parameterType="Student" resultMap="stdResult">
+       SELECT stud_id, name, email, DOB, 
+	       SUBSTR(phone,1,3)AS f,
+	       SUBSTR(PHONE,5,3)AS m,
+	       SUBSTR(PHONE,9,4)AS l 
+	    FROM STUDENTS
+	    <include refid="whereSQL"/>
+    </select>
+
+
+	<select id="selectStudentAll" resultType="Student">
+		<include refid="selectSQL" />
+	</select>
+	
+</mapper>
