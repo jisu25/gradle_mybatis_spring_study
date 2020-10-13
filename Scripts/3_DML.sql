@@ -40,3 +40,17 @@ SELECT stud_id, name, email, dob, phone,
 	substr(phone, 5, 3) AS m,
 	substr(phone, 9, 3) AS l
 FROM STUDENTS WHERE stud_id = 1;
+
+INSERT INTO STUDENTS(STUD_ID, NAME, EMAIL, PHONE, DOB) VALUES(4, 'Banana', 'Banana@gmail.com', '010-1234-5678', sysdate);
+
+SELECT STUD_ID, NAME, EMAIL, PHONE, DOB,  s.ADDR_ID, STREET, CITY, STATE, ZIP, COUNTRY
+FROM STUDENTS s LEFT OUTER JOIN ADDRESSES a ON s.ADDR_ID = a.ADDR_ID
+WHERE STUD_ID = 1;
+
+SELECT t.tutor_id, t.name as tutor_name, email, c.course_id, c.name, description, start_date, end_date
+FROM TUTORS t LEFT OUTER JOIN COURSES c ON t.TUTOR_ID = c.TUTOR_ID
+WHERE t.TUTOR_ID = 1;
+
+
+SELECT * FROM STUDENTS s ;
+DELETE students WHERE stud_id = 4;

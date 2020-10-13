@@ -15,7 +15,7 @@ public class PhoneTypeHandler extends BaseTypeHandler<PhoneNumber> {
 	@Override
 	public void setNonNullParameter(PreparedStatement ps, int i, PhoneNumber parameter, JdbcType jdbcType)
 			throws SQLException {
-		ps.setString(1, parameter.toString());
+		ps.setString(i, parameter.toString());
 	}
 
 	@Override

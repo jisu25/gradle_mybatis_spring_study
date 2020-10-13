@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gradle_mybatis_spring_study.mapper.CourseMapper">
+	<resultMap id="CourseResult" type="Course">
+		<id property="courseId" column="course_id" />
+		<result property="name" column="name" />
+		<result property="description" column="description" />
+		<result property="startDate" column="start_date" />
+		<result property="endDate" column="end_date" />
+		<result property="tutorId" column="tutor_id" />
+	</resultMap>
+
+	<sql id="selectSql">
+		select course_id, name, description, start_date, end_date, tutor_id from courses
+	</sql>
+	
+	<sql id="whereSql">
+		<where>
+			<if test="tutorId != null">and tutor_id = #{tutorId}</if>
+			<if test="courseName != null">and name = #{courseName}</if>
+			<if test="startDate != null">and start_date = #{startDate}</if>
+			<if test="endDate != null">and end_date = #{endDate}</if>
+		</where>
+	</sql>
+	
+	<select id="selectCourseByCondition" parameterType="map" resultMap="CourseResult">
+		<include refid="selectSql" />
+		<include refid="whereSql" />
+	</select>
+	
+	
+	<select id="selectCaseCourses" parameterType="map" resultMap="CourseResult">
+		<include refid="selectSql"/>
+		<choose>
+			<when test="searchBy=='Tutor'">where tutor_id = #{tutorId}</when>		
+			<when test="searchBy=='CourseName'">where name = #{courseName}</when>		
+			<otherwise>where end_date &gt;=sysdate</otherwise>
+		</choose>
+	</select>
+	
+	<sql id="whereSqlCDATA">
+		<where>
+			<if test="tutorId != null"><![CDATA[ and tutor_id = #{tutorId}]]></if>
+			<if test="courseName != null"><![CDATA[ and name = #{courseName}]]></if>
+			<if test="startDate != null"><![CDATA[ and start_date >= #{startDate}]]></if>
+			<if test="endDate != null"><![CDATA[ and end_date <= #{endDate}]]></if>
+		</where>
+	</sql>
+	
+	<select id="selectWhereCourses" parameterType="map" resultMap="CourseResult">
+		<include refid="selectSql" />	
+		<include refid="whereSqlCDATA" />	
+	</select>
+</mapper>
